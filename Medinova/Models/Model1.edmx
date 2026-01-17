@@ -31,8 +31,8 @@
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="IsActive" Type="bit" />
-          <Property Name="AppointmentDate" Type="date" />
-          <Property Name="AppointmentTime" Type="time" Precision="7" />
+          <Property Name="AppointmentDate" Type="datetime2" Precision="7" />
+          <Property Name="AppointmentTime" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Banners">
           <Key>
@@ -149,8 +149,8 @@
           <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
-          <Property Name="AppointmentDate" Type="DateTime" Precision="0" />
-          <Property Name="AppointmentTime" Type="Time" Precision="7" />
+          <Property Name="AppointmentDate" Type="DateTime" Precision="7" />
+          <Property Name="AppointmentTime" Type="String" />
           <NavigationProperty Name="Doctor" Relationship="MedinovaDbModel.FK_Appointments_Doctors" FromRole="Appointment" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="Banner">
