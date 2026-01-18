@@ -1,4 +1,5 @@
-﻿<!-- Appointment Start -->
+﻿@model Medinova.Models.Appointment
+<!-- Appointment Start -->
 <div class="container-fluid bg-primary my-5 py-5">
     <div class="container py-5">
         <div class="row gx-5">
@@ -19,30 +20,28 @@
             <div class="col-lg-6">
                 <div class="bg-white text-center rounded p-5">
                     <h1 class="mb-4">Book An Appointment</h1>
-                    <form>
+                    <form method="post" action="/Default/MakeAppointment">
                         <div class="row g-3">
+                            <label>Select a department</label>
                             <div class="col-12 col-sm-6">
-                                <select class="form-select bg-light border-0" style="height: 55px;">
-                                    <option selected>Choose Department</option>
-                                    <option value="1">Department 1</option>
-                                    <option value="2">Department 2</option>
-                                    <option value="3">Department 3</option>
+                                @Html.DropDownList("DepartmentId", (List<SelectListItem>)ViewBag.departments, "---Select a department---", new { @class = "form-control" })
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label>Select a doctor</label>
+                                <select id="DoctorId" name="DoctorId" class="form-control bg-light border-0" style="height: 55px;">
+                                    <option selected>---You need to choose a department---</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <select class="form-select bg-light border-0" style="height: 55px;">
-                                    <option selected>Select Doctor</option>
-                                    <option value="1">Doctor 1</option>
-                                    <option value="2">Doctor 2</option>
-                                    <option value="3">Doctor 3</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control bg-light border-0" placeholder="Your Name"
+                                <input type="text" name="FullName" class="form-control bg-light border-0" placeholder="Enter your full name"
                                        style="height: 55px;">
                             </div>
                             <div class="col-12 col-sm-6">
-                                <input type="email" class="form-control bg-light border-0" placeholder="Your Email"
+                                <input type="email" name="Email" class="form-control bg-light border-0" placeholder="Enter your E-mail"
+                                       style="height: 55px;">
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <input type="text" name="PhoneNumber" class="form-control bg-light border-0" placeholder="Enter your Phone Number"
                                        style="height: 55px;">
                             </div>
                             <div class="col-12 col-sm-6">
@@ -72,4 +71,38 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#DepartmentId").change(function () {
+            var selectedDepId = $(this).val();
+
+            var doctorDropdown = $("#DoctorId");
+
+            $.ajax({
+                url: '/Default/GetDoctorByDepartmentId',
+                type: 'GET',
+                data: { departmentId: selectedDepId },
+                dataType: 'json',
+                success: function (data) {
+                    doctorDropdown.empty();
+
+                    $.each(data, function (i, doctor) {
+                        doctorDropdown.append($('<option> </option>').val(doctor.Value).html(doctor.Text));
+                    });
+                }
+            })
+        })
+    })
+
+
+</script>
+
+
+
+
+
+
 <!-- Appointment End -->
