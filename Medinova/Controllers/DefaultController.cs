@@ -50,6 +50,7 @@ namespace Medinova.Controllers
         public ActionResult MakeAppointment(Appointment appointment)
         {
 
+            appointment.IsActive = true;
             context.Appointments.Add(appointment);
             context.SaveChanges();
             return RedirectToAction("Index");
@@ -61,15 +62,16 @@ namespace Medinova.Controllers
                                            .Select(doctor => new SelectListItem
                                            {
                                                Text = doctor.FullName,
-                                               Value = doctor.DepartmentId.ToString()
+                                               Value = doctor.DoctorId.ToString()
                                            }).ToList();
 
             return Json(doctors,JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetAvailableHours(DateTime selectedDate, int DoctorId)
+        [HttpPost]
+        public JsonResult GetAvailableHours(DateTime selectedDate, int doctorId)
         {
-            var bookedTimes = context.Appointments.Where(x => x.DoctorId == DoctorId && x.AppointmentDate == selectedDate).Select(x=>x.AppointmentTime).ToList();
+            var bookedTimes = context.Appointments.Where(x => x.DoctorId == doctorId && x.AppointmentDate == selectedDate).Select(x=>x.AppointmentTime).ToList();
 
             var dtoList = new List<AppointmentAvailabilityDto>();
             foreach(var hour in Times.AppointmentHours)

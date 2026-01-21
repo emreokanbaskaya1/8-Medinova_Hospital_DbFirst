@@ -46,7 +46,7 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="date" id="date" data-target-input="nearest">
-                                    @Html.DropDownList("AppointmentDate",(List<SelectListItem>)ViewBag.dateList,"---Select Date---", new {@class ="form-control"}))
+                                    @Html.DropDownList("AppointmentDate",(List<SelectListItem>)ViewBag.dateList,"---Select Date---", new {@class ="form-control"})
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6">
@@ -79,6 +79,11 @@
 
             var doctorDropdown = $("#DoctorId");
 
+            $("#AppointmentDate").val('').trigger('change');
+            timeDropdown.empty();
+            
+
+
             $.ajax({
                 url: '/Default/GetDoctorByDepartmentId',
                 type: 'GET',
@@ -86,6 +91,7 @@
                 dataType: 'json',
                 success: function (data) {
                     doctorDropdown.empty();
+                    
 
                     $.each(data, function (i, doctor) {
                         doctorDropdown.append($('<option> </option>').val(doctor.Value).html(doctor.Text));
@@ -101,9 +107,43 @@
 
             var timeDropdown = $("#AppointmentTime");
 
-            $.ajax
-        })
-    })
+            
+
+
+
+            $.ajax({
+                url: '/Default/GetAvailableHours',
+                type: 'POST',
+                dataType: 'json',
+                data: { selectedDate: selectedDate, doctorId: selectedDoctorId },
+                success: function (data) {
+                    timeDropdown.empty();
+                    
+
+                    $.each(data, function (i, item) {
+
+                        var isDisabled = false;
+                        var optionText = item.Time;
+
+                        if (item.IsBooked) {
+                            optionText += "(Dolu)";
+                            isDisabled = true;
+                        }
+
+                        var option = $('<option> </option>').val(item.Time).html(optionText);
+
+                        if (isDisabled) {
+                            option.prop('disabled', true);
+                        }
+
+                        timeDropdown.append(option);
+                        timeDropdown.prop('disabled', false);
+
+                    });
+                }
+            });
+        });
+    });
 
 
 </script>
