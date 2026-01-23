@@ -12,9 +12,10 @@
         <EntityTypeShape EntityType="MedinovaDbModel.Date" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MedinovaDbModel.Department" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MedinovaDbModel.Doctor" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MedinovaDbModel.sysdiagram" Width="1.5" PointX="3.375" PointY="6.75" />
+        <EntityTypeShape EntityType="MedinovaDbModel.sysdiagram" Width="1.5" PointX="8.375" PointY="3.625" />
         <AssociationConnector Association="MedinovaDbModel.FK_Appointments_Doctors" />
         <AssociationConnector Association="MedinovaDbModel.FK_Doctors_Departments" />
+        <EntityTypeShape EntityType="MedinovaDbModel.User" Width="1.5" PointX="10.375" PointY="3.625" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Medinova.Controllers
 {
+    [AllowAnonymous]
     public class DefaultController : Controller
     {
         MedinovaContext context = new MedinovaContext();
