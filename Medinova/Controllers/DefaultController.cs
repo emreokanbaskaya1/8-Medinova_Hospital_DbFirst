@@ -3,6 +3,7 @@ using Medinova.Enums;
 using Medinova.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -17,6 +18,41 @@ namespace Medinova.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultDoctor()
+        {
+            var doctors = context.Doctors.Include(x => x.Department).ToList();
+            return PartialView(doctors);
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultPackage()
+        {
+            var packages = context.Packages.ToList();
+            return PartialView(packages);
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultService()
+        {
+            var services = context.Services.ToList();
+            return PartialView(services);
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultAbout()
+        {
+            var about = context.Abouts.FirstOrDefault();
+            return PartialView(about);
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultAboutItem()
+        {
+            var aboutitems = context.AboutItems.ToList();
+            return PartialView(aboutitems);
         }
 
         [HttpGet]
@@ -94,5 +130,11 @@ namespace Medinova.Controllers
 
             return Json(dtoList, JsonRequestBehavior.AllowGet);
         }
+
+
+
+
+
+
     }
 }
