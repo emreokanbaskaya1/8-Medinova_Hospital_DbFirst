@@ -21,6 +21,20 @@ namespace Medinova.Controllers
         }
 
         [HttpGet]
+        public PartialViewResult DefaultTestimonial()
+        {
+            var testimonials = context.Testimonials.ToList();
+            return PartialView(testimonials);
+        }
+
+        [HttpGet]
+        public PartialViewResult DefaultBanner()
+        {
+            var banner = context.Banners.FirstOrDefault();
+            return PartialView(banner);
+        }
+
+        [HttpGet]
         public PartialViewResult DefaultDoctor()
         {
             var doctors = context.Doctors.Include(x => x.Department).ToList();

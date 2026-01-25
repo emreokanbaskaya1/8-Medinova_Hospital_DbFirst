@@ -1,0 +1,52 @@
+@model Medinova.Models.Service
+
+@{
+    ViewBag.Title = "Service Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Yeni Hizmet Ekle</h4>
+                    <a href="/Admin/AdminService/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            <h5>Validation Hatalarý:</h5>
+                            <pre>@ViewBag.ErrorMessage</pre>
+                        </div>
+                    }
+                    
+                    @using (Html.BeginForm("CreateService", "AdminService", FormMethod.Post))
+                    {
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        
+                        <div class="form-group">
+                            <label>Baþlýk</label>
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Hizmet baþlýðý giriniz" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label>Açýklama</label>
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 5, placeholder = "Hizmet açýklamasý giriniz" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Kaydet
+                        </button>
+                        <a href="/Admin/AdminService/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,11 +12,10 @@ namespace Medinova
     {
         protected void Application_Start()
         {
-            GlobalFilters.Filters.Add(new AuthorizeAttribute());
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            AreaRegistration.RegisterAllAreas(); // Bu satır EN ÜSTTE olmalı
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            // Diğer yapılandırmalar...
         }
     }
 }

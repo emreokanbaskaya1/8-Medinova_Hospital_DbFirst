@@ -1,0 +1,60 @@
+@model List<Medinova.Models.Department>
+
+@{
+    ViewBag.Title = "Departman Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Departman Listesi</h4>
+                    <a href="/Admin/AdminDepartment/CreateDepartment" class="btn btn-primary float-right">
+                        <i class="fa fa-plus"></i> Yeni Ekle
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Departman Adý</th>
+                                    <th>Ýþlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.DepartmentId</td>
+                                            <td>@item.Name</td>
+                                            <td>
+                                                <a href="/Admin/AdminDepartment/UpdateDepartment/@item.DepartmentId" class="btn btn-warning btn-sm">
+                                                    <i class="fa fa-edit"></i> Düzenle
+                                                </a>
+                                                <a href="/Admin/AdminDepartment/DeleteDepartment/@item.DepartmentId" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediðinize emin misiniz?')">
+                                                    <i class="fa fa-trash"></i> Sil
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">Henüz kayýt bulunmamaktadýr.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

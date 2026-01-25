@@ -1,0 +1,47 @@
+@model Medinova.Models.Testimonial
+
+@{
+    ViewBag.Title = "Testimonial Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Yeni Testimonial Ekle</h4>
+                    <a href="/Admin/AdminTestimonial/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminTestimonial/CreateTestimonial" method="post">
+                        <div class="form-group">
+                            <label>Ýsim</label>
+                            <input type="text" name="Name" class="form-control" placeholder="Ýsim giriniz" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Meslek</label>
+                            <input type="text" name="Profession" class="form-control" placeholder="Meslek giriniz" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Resim URL</label>
+                            <input type="text" name="ImageUrl" class="form-control" placeholder="Resim URL giriniz" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Açýklama</label>
+                            <textarea name="Description" class="form-control" rows="5" placeholder="Açýklama giriniz" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Kaydet
+                        </button>
+                        <a href="/Admin/AdminTestimonial/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

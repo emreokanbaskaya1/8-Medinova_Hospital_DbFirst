@@ -1,0 +1,44 @@
+@model Medinova.Models.Package
+
+@{
+    ViewBag.Title = "Package Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Paket Güncelle</h4>
+                    <a href="/Admin/AdminPackage/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminPackage/UpdatePackage" method="post">
+                        <input type="hidden" name="PackageId" value="@Model.PackageId" />
+                        <div class="form-group">
+                            <label>Paket Adý</label>
+                            <input type="text" name="PackageStyle" value="@Model.PackageStyle" class="form-control" placeholder="Paket adý giriniz" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Fiyat</label>
+                            <input type="number" name="Price" value="@Model.Price" class="form-control" placeholder="Fiyat giriniz" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Açýklama</label>
+                            <textarea name="Description" class="form-control" rows="5" placeholder="Paket özelliklerini her satýra bir tane gelecek þekilde giriniz" required>@Model.Description</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fa fa-save"></i> Güncelle
+                        </button>
+                        <a href="/Admin/AdminPackage/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

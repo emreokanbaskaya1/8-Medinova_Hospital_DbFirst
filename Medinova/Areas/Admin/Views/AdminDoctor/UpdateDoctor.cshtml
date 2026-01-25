@@ -1,0 +1,48 @@
+@model Medinova.Models.Doctor
+
+@{
+    ViewBag.Title = "Doktor Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Doktor Güncelle</h4>
+                    <a href="/Admin/AdminDoctor/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminDoctor/UpdateDoctor" method="post">
+                        <input type="hidden" name="DoctorId" value="@Model.DoctorId" />
+                        <div class="form-group">
+                            <label>Ad Soyad</label>
+                            <input type="text" name="FullName" value="@Model.FullName" class="form-control" placeholder="Doktor adý ve soyadý" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Departman</label>
+                            @Html.DropDownList("DepartmentId", (SelectList)ViewBag.Departments, "Departman Seçiniz", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label>Resim URL</label>
+                            <input type="text" name="ImageUrl" value="@Model.ImageUrl" class="form-control" placeholder="Doktor resim URL'si" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Açýklama</label>
+                            <textarea name="Description" class="form-control" rows="4" placeholder="Doktor hakkýnda kýsa açýklama" required>@Model.Description</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fa fa-save"></i> Güncelle
+                        </button>
+                        <a href="/Admin/AdminDoctor/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

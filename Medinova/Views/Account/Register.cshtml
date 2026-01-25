@@ -1,0 +1,192 @@
+@model Medinova.DTOs.RegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Medinova Hospital">
+    <title>Medinova || Admin Register</title>
+    
+    <!--! BEGIN: Favicon-->
+    <link rel="shortcut icon" type="image/x-icon" href="~/Templates/Duralux-admin-1.0.0/assets/images/favicon.ico">
+    <!--! END: Favicon-->
+    
+    <!--! BEGIN: Bootstrap CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/bootstrap.min.css">
+    <!--! END: Bootstrap CSS-->
+    
+    <!--! BEGIN: Vendors CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/vendors/css/vendors.min.css">
+    <!--! END: Vendors CSS-->
+    
+    <!--! BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/theme.min.css">
+    <!--! END: Custom CSS-->
+</head>
+
+<body>
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    <main class="auth-minimal-wrapper">
+        <div class="auth-minimal-inner">
+            <div class="minimal-card-wrapper">
+                <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
+                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
+                        <img src="~/Templates/Duralux-admin-1.0.0/assets/images/logo-abbr.png" alt="Medinova Logo" class="img-fluid">
+                    </div>
+                    <div class="card-body p-sm-5">
+                        <h2 class="fs-20 fw-bolder mb-4">Register</h2>
+                        <h4 class="fs-13 fw-bold mb-2">Create Medinova Account</h4>
+                        <p class="fs-12 fw-medium text-muted">
+                            Create a new account for <strong>Medinova</strong> Panel.
+                        </p>
+                        
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mt-3">
+                                <i class="feather-alert-circle me-2"></i>
+                                <strong>Error!</strong> @ViewBag.ErrorMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        
+                        @if (ViewBag.SuccessMessage != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show mt-3">
+                                <i class="feather-check-circle me-2"></i>
+                                <strong>Success!</strong> @ViewBag.SuccessMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "w-100 mt-4 pt-2" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            
+                            <div class="mb-4">
+                                @Html.TextBoxFor(m => m.FirstName, new { 
+                                    @class = "form-control", 
+                                    placeholder = "First Name", 
+                                    required = "required",
+                                    autofocus = "autofocus"
+                                })
+                                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mb-4">
+                                @Html.TextBoxFor(m => m.LastName, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Last Name", 
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mb-4">
+                                @Html.TextBoxFor(m => m.UserName, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Username", 
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mb-4">
+                                @Html.PasswordFor(m => m.Password, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Password", 
+                                    required = "required",
+                                    id = "newPassword"
+                                })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mb-4">
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Confirm Password", 
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="custom-control custom-checkbox">
+                                    @Html.CheckBoxFor(m => m.AcceptTerms, new { @class = "custom-control-input", id = "termsCondition", required = "required" })
+                                    <label class="custom-control-label c-pointer text-muted" for="termsCondition" style="font-weight: 400 !important">
+                                        I agree to all the <a href="#" target="_blank">Terms & Conditions</a> and <a href="#" target="_blank">Privacy Policy</a>.
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.AcceptTerms, "", new { @class = "text-danger small d-block mt-1" })
+                            </div>
+                            
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mt-3" })
+                            
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-lg btn-primary w-100">
+                                    <i class="feather-user-plus me-2"></i> Create Account
+                                </button>
+                            </div>
+                        }
+                        
+                        <div class="mt-5 text-muted text-center">
+                            <span>Already have an account?</span>
+                            <a href="@Url.Action("Login", "Account")" class="fw-bold">Login</a>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <a href="/Default/Index" class="btn btn-light btn-sm">
+                                <i class="feather-home me-2"></i> Back to Homepage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!--! ================================================================ !-->
+    <!--! [End] Main Content !-->
+    <!--! ================================================================ !-->
+
+    <!--! ================================================================ !-->
+    <!--! Footer Script !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Vendors JS !-->
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/vendors.min.js"></script>
+    <!--! END: Vendors JS !-->
+    
+    <!--! BEGIN: Apps Init  !-->
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/js/common-init.min.js"></script>
+    <!--! END: Apps Init !-->
+    
+    <!--! BEGIN: jQuery Validation !-->
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <!--! END: jQuery Validation !-->
+    
+    <script>
+        // Simple password strength indicator
+        $(document).ready(function() {
+            $('#newPassword').on('keyup', function() {
+                var password = $(this).val();
+                var strength = 0;
+                
+                if (password.length >= 6) strength++;
+                if (password.length >= 10) strength++;
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+                if (/[^a-zA-Z0-9]/.test(password)) strength++;
+                
+                console.log('Password strength:', strength);
+            });
+        });
+    </script>
+</body>
+</html>

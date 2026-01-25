@@ -1,0 +1,45 @@
+@{
+    ViewBag.Title = "Doktor Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Yeni Doktor Ekle</h4>
+                    <a href="/Admin/AdminDoctor/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminDoctor/CreateDoctor" method="post">
+                        <div class="form-group">
+                            <label>Ad Soyad</label>
+                            <input type="text" name="FullName" class="form-control" placeholder="Doktor adý ve soyadý" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Departman</label>
+                            @Html.DropDownList("DepartmentId", (SelectList)ViewBag.Departments, "Departman Seçiniz", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label>Resim URL</label>
+                            <input type="text" name="ImageUrl" class="form-control" placeholder="Doktor resim URL'si" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Açýklama</label>
+                            <textarea name="Description" class="form-control" rows="4" placeholder="Doktor hakkýnda kýsa açýklama" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Kaydet
+                        </button>
+                        <a href="/Admin/AdminDoctor/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

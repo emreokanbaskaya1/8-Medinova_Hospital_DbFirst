@@ -4,31 +4,138 @@
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Login</title>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Medinova Hospital">
+    <title>Medinova || Login Page</title>
+    
+    <!--! BEGIN: Favicon-->
+    <link rel="shortcut icon" type="image/x-icon" href="~/Templates/Duralux-admin-1.0.0/assets/images/favicon.ico">
+    <!--! END: Favicon-->
+    
+    <!--! BEGIN: Bootstrap CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/bootstrap.min.css">
+    <!--! END: Bootstrap CSS-->
+    
+    <!--! BEGIN: Vendors CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/vendors/css/vendors.min.css">
+    <!--! END: Vendors CSS-->
+    
+    <!--! BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/theme.min.css">
+    <!--! END: Custom CSS-->
 </head>
+
 <body>
-    <div> 
-        <div class="container">
-            <h4>Login Page</h4>
-            <form method="post">
-                <label>User Name</label>
-                <br />
-                @Html.TextBoxFor(x=>x.UserName, new {@class="form-control"})
-                <br />
-                <label>Password</label>
-                <input type="password" name="Password" class="form-control"/>
-                <br />
-                <span class="text-danger">@Html.ValidationSummary()</span>
-                <button class="btn btn-primary">Login</button>
-            </form>
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    <main class="auth-minimal-wrapper">
+        <div class="auth-minimal-inner">
+            <div class="minimal-card-wrapper">
+                <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
+                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
+                        <img src="~/Templates/Duralux-admin-1.0.0/assets/images/logo-abbr.png" alt="Medinova Logo" class="img-fluid">
+                    </div>
+                    <div class="card-body p-sm-5">
+                        <h2 class="fs-20 fw-bolder mb-4">Admin Login</h2>
+                        <h4 class="fs-13 fw-bold mb-2">Login to your account</h4>
+                        <p class="fs-12 fw-medium text-muted">
+                            Welcome to <strong>Medinova</strong> Admin Panel. Please enter your credentials.
+                        </p>
+                        
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mt-3">
+                                <i class="feather-alert-circle me-2"></i>
+                                <strong>Error!</strong> @ViewBag.ErrorMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "w-100 mt-4 pt-2" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            
+                            <div class="mb-4">
+                                @Html.TextBoxFor(m => m.UserName, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Username", 
+                                    required = "required",
+                                    autofocus = "autofocus"
+                                })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="mb-3">
+                                @Html.PasswordFor(m => m.Password, new { 
+                                    @class = "form-control", 
+                                    placeholder = "Password", 
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                            </div>
+                            
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rememberMe" name="RememberMe">
+                                        <label class="custom-control-label c-pointer" for="rememberMe">Remember Me</label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="fs-11 text-primary">Forgot Password?</a>
+                                </div>
+                            </div>
+                            
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mt-3" })
+                            
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-lg btn-primary w-100">
+                                    <i class="feather-log-in me-2"></i> Login
+                                </button>
+                            </div>
+                        }
+                        
+                        
+                        
+                        <div class="mt-5 text-muted text-center">
+                            <span>Don't have an account?</span>
+                            <a href="@Url.Action("Register", "Account")" class="fw-bold">Create Account</a>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <a href="/" class="btn btn-light btn-sm">
+                                <i class="feather-home me-2"></i> Back to Homepage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
+    <!--! ================================================================ !-->
+    <!--! [End] Main Content !-->
+    <!--! ================================================================ !-->
 
-
-    </div>
+    <!--! ================================================================ !-->
+    <!--! Footer Script !-->
+    <!--! ================================================================ !-->
+    <!--! BEGIN: Vendors JS !-->
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/vendors.min.js"></script>
+    <!--! END: Vendors JS !-->
+    
+    <!--! BEGIN: Apps Init  !-->
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/js/common-init.min.js"></script>
+    <!--! END: Apps Init !-->
+    
+    <!--! BEGIN: jQuery Validation !-->
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <!--! END: jQuery Validation !-->
 </body>
 </html>

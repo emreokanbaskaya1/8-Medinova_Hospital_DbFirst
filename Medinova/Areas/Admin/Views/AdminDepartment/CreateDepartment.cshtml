@@ -1,0 +1,33 @@
+@{
+    ViewBag.Title = "Departman Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Yeni Departman Ekle</h4>
+                    <a href="/Admin/AdminDepartment/Index" class="btn btn-secondary float-right">
+                        <i class="fa fa-arrow-left"></i> Geri Dön
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form action="/Admin/AdminDepartment/CreateDepartment" method="post">
+                        <div class="form-group">
+                            <label>Departman Adý</label>
+                            <input type="text" name="Name" class="form-control" placeholder="Departman adý giriniz (örn: Kardiyoloji)" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Kaydet
+                        </button>
+                        <a href="/Admin/AdminDepartment/Index" class="btn btn-secondary">
+                            <i class="fa fa-times"></i> Ýptal
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

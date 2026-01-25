@@ -1,0 +1,78 @@
+@model List<Medinova.Models.Service>
+
+@{
+    ViewBag.Title = "Service Yönetimi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <strong>Baþarýlý!</strong> @TempData["SuccessMessage"]
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            }
+            
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <strong>Hata!</strong> @TempData["ErrorMessage"]
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            }
+            
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Hizmet Listesi</h4>
+                    <a href="/Admin/AdminService/CreateService" class="btn btn-primary float-right">
+                        <i class="fa fa-plus"></i> Yeni Ekle
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Baþlýk</th>
+                                    <th>Açýklama</th>
+                                    <th>Ýþlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ServiceId</td>
+                                            <td>@item.Title</td>
+                                            <td>@(item.Description != null && item.Description.Length > 70 ? item.Description.Substring(0, 70) + "..." : item.Description)</td>
+                                            <td>
+                                                <a href="/Admin/AdminService/UpdateService/@item.ServiceId" class="btn btn-warning btn-sm">
+                                                    <i class="fa fa-edit"></i> Düzenle
+                                                </a>
+                                                <a href="/Admin/AdminService/DeleteService/@item.ServiceId" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediðinize emin misiniz?')">
+                                                    <i class="fa fa-trash"></i> Sil
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">Henüz kayýt bulunmamaktadýr.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
