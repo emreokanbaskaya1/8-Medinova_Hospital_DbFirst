@@ -100,10 +100,38 @@ namespace Medinova.Controllers
         [HttpPost]
         public ActionResult MakeAppointment(Appointment appointment)
         {
+            // Kullanıcı giriş yapmış mı kontrol et
+            if (Session["userId"] == null)
+            {
+                TempData["Error"] = "Randevu oluşturmak için giriş yapmalısınız!";
+                return RedirectToAction("Login", "Account");
+            }
 
+            // FullName'i session'dan al (eğer boşsa)
+            if (string.IsNullOrEmpty(appointment.FullName))
+            {
+                appointment.FullName = Session["fullName"]?.ToString();
+            }
+            
             appointment.IsActive = true;
+            
+            // Aynı doktor, tarih ve saatte randevu kontrolü
+            var existingAppointment = context.Appointments
+                .FirstOrDefault(a => a.DoctorId == appointment.DoctorId &&
+                                    DbFunctions.TruncateTime(a.AppointmentDate) == DbFunctions.TruncateTime(appointment.AppointmentDate) &&
+                                    a.AppointmentTime == appointment.AppointmentTime &&
+                                    a.IsActive == true);
+
+            if (existingAppointment != null)
+            {
+                TempData["Error"] = "Bu tarih ve saat için randevu dolu! Lütfen başka bir saat seçin.";
+                return RedirectToAction("Index");
+            }
+
             context.Appointments.Add(appointment);
             context.SaveChanges();
+            
+            TempData["Success"] = "Randevunuz başarıyla oluşturuldu!";
             return RedirectToAction("Index");
         }
 
@@ -122,7 +150,13 @@ namespace Medinova.Controllers
         [HttpPost]
         public JsonResult GetAvailableHours(DateTime selectedDate, int doctorId)
         {
-            var bookedTimes = context.Appointments.Where(x => x.DoctorId == doctorId && x.AppointmentDate == selectedDate).Select(x=>x.AppointmentTime).ToList();
+            // Sadece aktif randevuları kontrol et (iptal edilenler hariç)
+            var bookedTimes = context.Appointments
+                .Where(x => x.DoctorId == doctorId && 
+                           DbFunctions.TruncateTime(x.AppointmentDate) == selectedDate.Date &&
+                           x.IsActive == true)
+                .Select(x => x.AppointmentTime)
+                .ToList();
 
             var dtoList = new List<AppointmentAvailabilityDto>();
             foreach(var hour in Times.AppointmentHours)
@@ -145,10 +179,12 @@ namespace Medinova.Controllers
             return Json(dtoList, JsonRequestBehavior.AllowGet);
         }
 
-
-
-
-
-
+        // Kullanıcı giriş durumunu kontrol et (AJAX için)
+        [HttpGet]
+        public JsonResult CheckLoginStatus()
+        {
+            bool isLoggedIn = Session["userId"] != null;
+            return Json(new { isLoggedIn = isLoggedIn }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

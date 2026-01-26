@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -7,7 +7,7 @@
     <meta name="description" content="Medinova Hospital Management System">
     <meta name="author" content="Medinova">
 
-    <title>@ViewBag.Title - Medinova Admin Panel</title>
+    <title>@ViewBag.Title - Medinova</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="~/Templates/Duralux-admin-1.0.0/assets/images/favicon.ico">
@@ -24,11 +24,17 @@
 </head>
 
 <body>
+    @{
+        var userRole = Session["userRole"]?.ToString();
+        var isDoctor = userRole == "Doctor";
+        var isPatient = userRole == "Patient";
+    }
+
     <!-- Navigation Menu -->
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="b-brand">
+                <a href="@Url.Action("Index", "Default", new { area = "" })" class="b-brand">
                     <img src="~/Templates/Duralux-admin-1.0.0/assets/images/logo-full.png" alt="Medinova" class="logo logo-lg">
                     <img src="~/Templates/Duralux-admin-1.0.0/assets/images/logo-abbr.png" alt="M" class="logo logo-sm">
                 </a>
@@ -39,113 +45,79 @@
                         <label>Navigation</label>
                     </li>
 
-                    <!-- Dashboard -->
-                    <li class="nxl-item">
-                        <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-airplay"></i></span>
-                            <span class="nxl-mtext">Dashboard</span>
-                        </a>
-                    </li>
+                    @if (isDoctor)
+                    {
+                        <!-- Doctor Menu -->
+                        <li class="nxl-item">
+                            <a href="@Url.Action("Index", "Doctor", new { area = "Doctor" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-home"></i></span>
+                                <span class="nxl-mtext">Dashboard</span>
+                            </a>
+                        </li>
 
-                    <!-- User Management -->
-                    <li class="nxl-item nxl-caption">
-                        <label>User Management</label>
-                    </li>
+                        <li class="nxl-item nxl-caption">
+                            <label>Appointments</label>
+                        </li>
 
-                    <li class="nxl-item">
-                        <a href="@Url.Action("Index", "AdminUser", new { area = "Admin" })" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Users & Roles</span>
-                        </a>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("ActiveAppointments", "Doctor", new { area = "Doctor" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-check-circle"></i></span>
+                                <span class="nxl-mtext">Active Appointments</span>
+                            </a>
+                        </li>
 
-                    <!-- Content Management -->
-                    <li class="nxl-item nxl-caption">
-                        <label>Content Management</label>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("AllAppointments", "Doctor", new { area = "Doctor" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-list"></i></span>
+                                <span class="nxl-mtext">All Appointments</span>
+                            </a>
+                        </li>
+                    }
 
-                    <!-- About -->
-                    <li class="nxl-item">
-                        <a href="@Url.Action("Index", "AdminAbout", new { area = "Admin" })" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-info"></i></span>
-                            <span class="nxl-mtext">About Us</span>
-                        </a>
-                    </li>
+                    @if (isPatient)
+                    {
+                        <!-- Patient Menu -->
+                        <li class="nxl-item">
+                            <a href="@Url.Action("Index", "Patient", new { area = "Patient" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-home"></i></span>
+                                <span class="nxl-mtext">Dashboard</span>
+                            </a>
+                        </li>
 
-                    <!-- Doctors -->
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-activity"></i></span>
-                            <span class="nxl-mtext">Doctors</span>
-                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("Index", "AdminDoctor", new { area = "Admin" })">Doctor List</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("CreateDoctor", "AdminDoctor", new { area = "Admin" })">Add New Doctor</a></li>
-                        </ul>
-                    </li>
+                        <li class="nxl-item nxl-caption">
+                            <label>Appointments</label>
+                        </li>
 
-                    <!-- Departments -->
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-layers"></i></span>
-                            <span class="nxl-mtext">Departments</span>
-                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("Index", "AdminDepartment", new { area = "Admin" })">Department List</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("CreateDepartment", "AdminDepartment", new { area = "Admin" })">Add New Department</a></li>
-                        </ul>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("CreateAppointment", "Patient", new { area = "Patient" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-plus-circle"></i></span>
+                                <span class="nxl-mtext">New Appointment</span>
+                            </a>
+                        </li>
 
-                    <!-- Services -->
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
-                            <span class="nxl-mtext">Services</span>
-                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("Index", "AdminService", new { area = "Admin" })">Service List</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("CreateService", "AdminService", new { area = "Admin" })">Add New Service</a></li>
-                        </ul>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("ActiveAppointments", "Patient", new { area = "Patient" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-check-circle"></i></span>
+                                <span class="nxl-mtext">Active Appointments</span>
+                            </a>
+                        </li>
 
-                    <!-- Packages -->
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-package"></i></span>
-                            <span class="nxl-mtext">Packages</span>
-                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("Index", "AdminPackage", new { area = "Admin" })">Package List</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("CreatePackage", "AdminPackage", new { area = "Admin" })">Add New Package</a></li>
-                        </ul>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("PastAppointments", "Patient", new { area = "Patient" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-clock"></i></span>
+                                <span class="nxl-mtext">Past Appointments</span>
+                            </a>
+                        </li>
 
-                    <!-- Testimonials -->
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-message-square"></i></span>
-                            <span class="nxl-mtext">Testimonials</span>
-                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("Index", "AdminTestimonial", new { area = "Admin" })">Testimonial List</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="@Url.Action("CreateTestimonial", "AdminTestimonial", new { area = "Admin" })">Add New Testimonial</a></li>
-                        </ul>
-                    </li>
+                        <li class="nxl-item">
+                            <a href="@Url.Action("CancelledAppointments", "Patient", new { area = "Patient" })" class="nxl-link">
+                                <span class="nxl-micon"><i class="feather-x-circle"></i></span>
+                                <span class="nxl-mtext">Cancelled Appointments</span>
+                            </a>
+                        </li>
+                    }
 
-                    <!-- Banner -->
-                    <li class="nxl-item">
-                        <a href="@Url.Action("Index", "AdminBanner", new { area = "Admin" })" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-image"></i></span>
-                            <span class="nxl-mtext">Banner</span>
-                        </a>
-                    </li>
-
-                    <!-- Account -->
+                    <!-- Common Menu Items -->
                     <li class="nxl-item nxl-caption">
                         <label>Account</label>
                     </li>
@@ -185,16 +157,30 @@
                         <i class="feather-align-left"></i>
                     </a>
                 </div>
+                <div class="nxl-lavel-mega-menu-toggle d-flex d-lg-none">
+                    <a href="javascript:void(0);" id="nxl-lavel-mega-menu-open">
+                        <i class="feather-align-left"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Header Right -->
             <div class="header-right ms-auto">
                 <div class="d-flex align-items-center">
-                    <!-- Admin Badge -->
+                    <!-- Role Badge -->
                     <div class="nxl-h-item d-none d-sm-flex me-3">
-                        <span class="badge bg-danger fs-12 px-3 py-2">
-                            <i class="feather-shield me-1"></i> Admin Panel
-                        </span>
+                        @if (isDoctor)
+                        {
+                            <span class="badge bg-primary fs-12 px-3 py-2">
+                                <i class="feather-user me-1"></i> Doctor Panel
+                            </span>
+                        }
+                        else if (isPatient)
+                        {
+                            <span class="badge bg-success fs-12 px-3 py-2">
+                                <i class="feather-user me-1"></i> Patient Panel
+                            </span>
+                        }
                     </div>
 
                     <!-- Full Screen -->
@@ -222,10 +208,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="@Url.Action("Index", "AdminUser", new { area = "Admin" })" class="dropdown-item">
-                                <i class="feather-users"></i>
-                                <span>Manage Users</span>
-                            </a>
                             <a href="@Url.Action("Index", "Default", new { area = "" })" class="dropdown-item">
                                 <i class="feather-home"></i>
                                 <span>View Website</span>
@@ -251,10 +233,6 @@
                     <div class="page-header-title">
                         <h5 class="m-b-10">@ViewBag.Title</h5>
                     </div>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Home</a></li>
-                        <li class="breadcrumb-item">@ViewBag.Title</li>
-                    </ul>
                 </div>
             </div>
 
@@ -267,7 +245,7 @@
         <!-- Footer -->
         <footer class="footer">
             <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
-                <span>Copyright ©</span>
+                <span>Copyright �</span>
                 <script>document.write(new Date().getFullYear());</script>
             </p>
             <p><span>Medinova Hospital Management System</span></p>
@@ -281,7 +259,6 @@
     <!-- Vendors JS -->
     <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/vendors.min.js"></script>
     <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/daterangepicker.min.js"></script>
-    <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/apexcharts.min.js"></script>
 
     <!-- Apps Init -->
     <script src="~/Templates/Duralux-admin-1.0.0/assets/js/common-init.min.js"></script>

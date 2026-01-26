@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -104,8 +103,37 @@
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="/Account/Login" class="nav-item nav-link">Login</a>
-                        <a href="/Account/Register" class="nav-item nav-link">Register</a>
+                        
+                        @if (Session["userId"] != null)
+                        {
+                            var userRole = Session["userRole"]?.ToString();
+                            if (userRole == "Admin")
+                            {
+                                <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="nav-item nav-link">
+                                    <i class="bi bi-shield-check me-1"></i>Admin Panel
+                                </a>
+                            }
+                            else if (userRole == "Doctor")
+                            {
+                                <a href="@Url.Action("Index", "Doctor", new { area = "Doctor" })" class="nav-item nav-link">
+                                    <i class="bi bi-heart-pulse me-1"></i>Doctor Panel
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Index", "Patient", new { area = "Patient" })" class="nav-item nav-link">
+                                    <i class="bi bi-person-circle me-1"></i>Patient Panel
+                                </a>
+                            }
+                            <a href="@Url.Action("Logout", "Account")" class="nav-item nav-link">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="nav-item nav-link">Login</a>
+                            <a href="/Account/Register" class="nav-item nav-link">Register</a>
+                        }
                     </div>
                 </div>
             </nav>

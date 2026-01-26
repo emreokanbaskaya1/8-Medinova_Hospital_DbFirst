@@ -132,13 +132,19 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminAboutController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminAboutItemController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminAppointmentController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminBannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminDepartmentController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminDoctorController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminPackageController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminServiceController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminTestimonialController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminUserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Doctor\Controllers\DoctorController.cs" />
     <Compile Include="Areas\Doctor\DoctorAreaRegistration.cs" />
+    <Compile Include="Areas\Patient\Controllers\PatientController.cs" />
+    <Compile Include="Areas\Patient\PatientAreaRegistration.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -147,6 +153,7 @@
     <Compile Include="DTOs\LoginDto.cs" />
     <Compile Include="DTOs\RegisterDto.cs" />
     <Compile Include="Enums\Times.cs" />
+    <Compile Include="Filters\AuthorizeRoleAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -242,6 +249,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="_SQLScripts\AddDoctorIdToUsers.sql" />
     <EntityDeploy Include="Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -277,6 +285,20 @@
     <Content Include="Areas\Admin\Views\AdminDepartment\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AdminDepartment\CreateDepartment.cshtml" />
     <Content Include="Areas\Admin\Views\AdminDepartment\UpdateDepartment.cshtml" />
+    <Content Include="Areas\Doctor\Views\Doctor\Index.cshtml" />
+    <Content Include="Areas\Doctor\Views\Doctor\AllAppointments.cshtml" />
+    <Content Include="Areas\Patient\Views\Patient\Index.cshtml" />
+    <Content Include="Areas\Patient\Views\Patient\CreateAppointment.cshtml" />
+    <Content Include="Areas\Patient\Views\web.config" />
+    <Content Include="Areas\Doctor\Views\Doctor\ActiveAppointments.cshtml" />
+    <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUser\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUser\AssignRole.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUser\Details.cshtml" />
+    <Content Include="Areas\Patient\Views\Patient\ActiveAppointments.cshtml" />
+    <Content Include="Areas\Patient\Views\Patient\PastAppointments.cshtml" />
+    <Content Include="Areas\Patient\Views\Patient\CancelledAppointments.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminAppointment\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -1561,16 +1583,18 @@
     <Content Include="Templates\Duralux-admin-1.0.0\docs\assets\fonts\bootstrap-icons.woff2" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\RegisterSuccess.cshtml" />
+    <Content Include="Views\Account\Unauthorized.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Doctor\Controllers\" />
     <Folder Include="Areas\Doctor\Data\" />
     <Folder Include="Areas\Doctor\Views\Shared\" />
     <Folder Include="Areas\User\Controllers\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Views\Shared\" />
+    <Folder Include="_Docs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

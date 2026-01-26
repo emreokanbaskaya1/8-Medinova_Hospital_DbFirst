@@ -21,6 +21,7 @@
         <EntityTypeShape EntityType="MedinovaDbModel.Testimonial" Width="1.5" PointX="7.5" PointY="6.625" />
         <EntityTypeShape EntityType="MedinovaDbModel.Role" Width="1.5" PointX="10.875" PointY="8.625" />
         <AssociationConnector Association="MedinovaDbModel.UserRoles" />
+        <AssociationConnector Association="MedinovaDbModel.FK_Users_Doctors" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

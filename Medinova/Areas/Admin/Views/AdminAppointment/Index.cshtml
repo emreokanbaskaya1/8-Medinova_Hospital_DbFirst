@@ -1,0 +1,244 @@
+@model IEnumerable<Medinova.Models.Appointment>
+@{
+    ViewBag.Title = "All Appointments";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-sm-6">
+                    <h3 class="page-title">All Appointments</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Appointments</li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 text-end">
+                    <a href="@Url.Action("Index", "Dashboard")" class="btn btn-primary">
+                        <i class="feather-arrow-left me-2"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active" onclick="filterAppointments('all')">
+                        <i class="feather-list me-1"></i> All (@Model.Count())
+                    </button>
+                    <button type="button" class="btn btn-outline-success" onclick="filterAppointments('active')">
+                        <i class="feather-check-circle me-1"></i> Active (@Model.Count(a => a.IsActive == true))
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" onclick="filterAppointments('cancelled')">
+                        <i class="feather-x-circle me-1"></i> Cancelled (@Model.Count(a => a.IsActive == false))
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointments Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Appointment List</h5>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" id="appointmentsTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Patient Name</th>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr data-status="@(item.IsActive == true ? "active" : "cancelled")">
+                                        <td>@item.AppointmentId</td>
+                                        <td><strong>@item.FullName</strong></td>
+                                        <td>
+                                            @if (item.Doctor != null)
+                                            {
+                                                @item.Doctor.FullName
+                                            }
+                                            else
+                                            {
+                                                <text>-</text>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.AppointmentDate.HasValue)
+                                            {
+                                                @item.AppointmentDate.Value.ToString("dd MMM yyyy")
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">@item.AppointmentTime</span>
+                                        </td>
+                                        <td>@(item.PhoneNumber ?? "-")</td>
+                                        <td>@(item.Email ?? "-")</td>
+                                        <td>
+                                            @if (item.IsActive == true)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.IsActive == true)
+                                            {
+                                                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(@item.AppointmentId)">
+                                                    <i class="feather-x-circle"></i> Cancel
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-sm btn-success" onclick="activateAppointment(@item.AppointmentId)">
+                                                    <i class="feather-check-circle"></i> Activate
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="feather-info me-2"></i>
+                        No appointments found.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function filterAppointments(filter) {
+            const rows = document.querySelectorAll('#appointmentsTable tbody tr');
+            const buttons = document.querySelectorAll('.btn-group button');
+
+            // Update button states
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter rows
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else if (filter === 'active' && status === 'active') {
+                    row.style.display = '';
+                } else if (filter === 'cancelled' && status === 'cancelled') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function cancelAppointment(appointmentId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to cancel this appointment?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Cancel It!',
+                cancelButtonText: 'No, Go Back'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("CancelAppointment", "AdminAppointment", new { area = "Admin" })',
+                        type: 'POST',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'An error occurred.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function activateAppointment(appointmentId) {
+            Swal.fire({
+                title: 'Activate Appointment?',
+                text: "Do you want to activate this appointment?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Activate It!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("ActivateAppointment", "AdminAppointment", new { area = "Admin" })',
+                        type: 'POST',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'An error occurred.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

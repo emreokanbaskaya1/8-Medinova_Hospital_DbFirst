@@ -1,0 +1,51 @@
+@{
+    ViewBag.Title = "Yetkisiz Eriþim";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yetkisiz Eriþim - Medinova</title>
+    
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Templates/Duralux-admin-1.0.0/assets/css/theme.min.css">
+</head>
+<body>
+    <main class="auth-minimal-wrapper">
+        <div class="auth-minimal-inner">
+            <div class="minimal-card-wrapper">
+                <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
+                    <div class="card-body p-sm-5 text-center">
+                        <div class="mb-4">
+                            <i class="feather-alert-triangle text-danger" style="font-size: 80px;"></i>
+                        </div>
+                        <h1 class="text-danger mb-3">403</h1>
+                        <h2 class="fs-20 fw-bolder mb-4">Yetkisiz Eriþim!</h2>
+                        <p class="fs-14 fw-medium text-muted mb-4">
+                            @(ViewBag.ErrorMessage ?? "Bu sayfaya eriþim yetkiniz bulunmamaktadýr.")
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="@Url.Action("Logout", "Account", new { area = "" })" class="btn btn-danger">
+                                <i class="feather-log-out me-2"></i> Çýkýþ Yap
+                            </a>
+                            <a href="javascript:history.back()" class="btn btn-secondary">
+                                <i class="feather-arrow-left me-2"></i> Geri Dön
+                            </a>
+                            <a href="@Url.Action("Index", "Default", new { area = "" })" class="btn btn-primary">
+                                <i class="feather-home me-2"></i> Ana Sayfa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/vendors/js/vendors.min.js"></script>
+    <script src="~/Templates/Duralux-admin-1.0.0/assets/js/common-init.min.js"></script>
+</body>
+</html>

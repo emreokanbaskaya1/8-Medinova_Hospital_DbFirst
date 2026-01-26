@@ -20,69 +20,115 @@
             <div class="col-lg-6">
                 <div class="bg-white text-center rounded p-5">
                     <h1 class="mb-4">Book An Appointment</h1>
-                    <form method="post" action="/Default/MakeAppointment">
-                        <div class="row g-3">
-                            <label>Select a department</label>
-                            <div class="col-12 col-sm-6">
-                                @Html.DropDownList("DepartmentId", (List<SelectListItem>)ViewBag.departments, "---Select a department---", new { @class = "form-control" })
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <label>Select a doctor</label>
-                                <select id="DoctorId" name="DoctorId" class="form-control bg-light border-0" style="height: 55px;">
-                                    <option selected>---You need to choose a department---</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <input type="text" name="FullName" class="form-control bg-light border-0" placeholder="Enter your full name"
-                                       style="height: 55px;">
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <input type="email" name="Email" class="form-control bg-light border-0" placeholder="Enter your E-mail"
-                                       style="height: 55px;">
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <input type="text" name="PhoneNumber" class="form-control bg-light border-0" placeholder="Enter your Phone Number"
-                                       style="height: 55px;">
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="date" id="date" data-target-input="nearest">
-                                    @Html.DropDownList("AppointmentDate",(List<SelectListItem>)ViewBag.dateList,"---Select Date---", new {@class ="form-control"})
+                    
+                    @if (Session["userId"] != null)
+                    {
+                        <!-- Appointment form for logged in users -->
+                        <form method="post" action="/Default/MakeAppointment" id="appointmentForm">
+                            <div class="row g-3">
+                                <label>Select a department</label>
+                                <div class="col-12 col-sm-6">
+                                    @Html.DropDownList("DepartmentId", (List<SelectListItem>)ViewBag.departments, "---Select a department---", new { @class = "form-control" })
                                 </div>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="time" id="time" data-target-input="nearest">
-                                    <select id="AppointmentTime" name="AppointmentTime" class="form-control bg-light border-0" style="height: 55px;">
-                                        <option selected>---You need to choose a date---</option>
+                                <div class="col-12 col-sm-6">
+                                    <label>Select a doctor</label>
+                                    <select id="DoctorId" name="DoctorId" class="form-control bg-light border-0" style="height: 55px;">
+                                        <option selected>---Select department first---</option>
                                     </select>
                                 </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="FullName" class="form-control bg-light border-0" placeholder="Enter your full name"
+                                           style="height: 55px;" value="@Session["fullName"]" readonly>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" name="Email" class="form-control bg-light border-0" placeholder="Enter your E-mail"
+                                           style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" name="PhoneNumber" class="form-control bg-light border-0" placeholder="Enter your Phone Number"
+                                           style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="date" id="date" data-target-input="nearest">
+                                        @Html.DropDownList("AppointmentDate", (List<SelectListItem>)ViewBag.dateList, "---Select Date---", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="time" id="time" data-target-input="nearest">
+                                        <select id="AppointmentTime" name="AppointmentTime" class="form-control bg-light border-0" style="height: 55px;">
+                                            <option selected>---Select date first---</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="PatientId" value="@Session["userId"]" />
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">
+                                        Make An Appointment
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">
-                                    Make An
-                                    Appointment
-                                </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- Info message and buttons for non-logged in users -->
+                        <div class="text-center py-4">
+                            <i class="fas fa-user-lock text-primary mb-4" style="font-size: 64px;"></i>
+                            <h4 class="mb-3">You must login to book an appointment</h4>
+                            <p class="text-muted mb-4">
+                                You need to login to the system to create an appointment. 
+                                If you don't have an account, you can register now.
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="@Url.Action("Login", "Account")" class="btn btn-primary rounded-pill py-3 px-5" onclick="showLoginAlert(); return false;">
+                                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                                </a>
+                                <a href="@Url.Action("Register", "Account")" class="btn btn-outline-primary rounded-pill py-3 px-5">
+                                    <i class="fas fa-user-plus me-2"></i> Register
+                                </a>
                             </div>
                         </div>
-                    </form>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript">
+    // Show login alert
+    function showLoginAlert() {
+        Swal.fire({
+            title: 'Login Required!',
+            text: 'You need to login to the system to create an appointment.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#13C5DD',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-sign-in-alt"></i> Login',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '@Url.Action("Login", "Account")';
+            }
+        });
+    }
+
     $(document).ready(function () {
+        @if (Session["userId"] != null)
+        {
+            <text>
         $("#DepartmentId").change(function () {
             var selectedDepId = $(this).val();
-
             var doctorDropdown = $("#DoctorId");
+            var timeDropdown = $("#AppointmentTime");
 
             $("#AppointmentDate").val('').trigger('change');
             timeDropdown.empty();
-            
-
 
             $.ajax({
                 url: '/Default/GetDoctorByDepartmentId',
@@ -91,25 +137,25 @@
                 dataType: 'json',
                 success: function (data) {
                     doctorDropdown.empty();
+                    doctorDropdown.append($('<option>').val('').html('---Select a doctor---'));
                     
-
                     $.each(data, function (i, doctor) {
-                        doctorDropdown.append($('<option> </option>').val(doctor.Value).html(doctor.Text));
+                        doctorDropdown.append($('<option>').val(doctor.Value).html(doctor.Text));
                     });
                 }
-            })
-        })
+            });
+        });
 
         $("#AppointmentDate").change(function () {
             var selectedDate = $(this).val();
-
             var selectedDoctorId = $("#DoctorId").val();
-
             var timeDropdown = $("#AppointmentTime");
 
-            
-
-
+            if (!selectedDoctorId) {
+                Swal.fire('Warning', 'Please select a doctor first!', 'warning');
+                $(this).val('');
+                return;
+            }
 
             $.ajax({
                 url: '/Default/GetAvailableHours',
@@ -118,10 +164,9 @@
                 data: { selectedDate: selectedDate, doctorId: selectedDoctorId },
                 success: function (data) {
                     timeDropdown.empty();
-                    
+                    timeDropdown.append($('<option>').val('').html('---Select a time---'));
 
                     $.each(data, function (i, item) {
-
                         var isDisabled = false;
                         var optionText = item.Time;
 
@@ -130,27 +175,37 @@
                             isDisabled = true;
                         }
 
-                        var option = $('<option> </option>').val(item.Time).html(optionText);
+                        var option = $('<option>').val(item.Time).html(optionText);
 
                         if (isDisabled) {
                             option.prop('disabled', true);
+                            option.css('color', '#dc3545');
                         }
 
                         timeDropdown.append(option);
-                        timeDropdown.prop('disabled', false);
-
                     });
+                    
+                    timeDropdown.prop('disabled', false);
                 }
             });
         });
+
+        // Form submit validation
+        $("#appointmentForm").submit(function(e) {
+            var doctorId = $("#DoctorId").val();
+            var appointmentTime = $("#AppointmentTime").val();
+            var appointmentDate = $("#AppointmentDate").val();
+
+            if (!doctorId || !appointmentTime || !appointmentDate) {
+                e.preventDefault();
+                Swal.fire('Missing Information', 'Please fill in all required fields!', 'error');
+                return false;
+            }
+            
+            return true;
+        });
+            </text>
+        }
     });
-
-
 </script>
-
-
-
-
-
-
 <!-- Appointment End -->

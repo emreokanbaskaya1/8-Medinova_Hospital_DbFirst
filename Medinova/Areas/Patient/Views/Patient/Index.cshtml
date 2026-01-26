@@ -1,0 +1,213 @@
+@model IEnumerable<Medinova.Models.Appointment>
+@{
+    ViewBag.Title = "Patient Panel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-content">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <h3 class="page-title">Welcome, @Session["fullName"]</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index")">Patient Panel</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ul>
+            </div>
+            <div class="col-sm-6 text-end">
+                <a href="@Url.Action("CreateAppointment")" class="btn btn-primary">
+                    <i class="feather-plus me-1"></i> New Appointment
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-4 col-sm-6 col-12">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white">Active Appointments</h6>
+                            <h2 class="text-white">@ViewBag.ActiveCount</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="feather-calendar text-white" style="font-size: 48px; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("ActiveAppointments")" class="text-white small">View Details ?</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-sm-6 col-12">
+            <div class="card bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white">Past Appointments</h6>
+                            <h2 class="text-white">@ViewBag.PastCount</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="feather-clock text-white" style="font-size: 48px; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("PastAppointments")" class="text-white small">View Details ?</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-sm-6 col-12">
+            <div class="card bg-danger">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white">Cancelled</h6>
+                            <h2 class="text-white">@ViewBag.CancelledCount</h2>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="feather-x-circle text-white" style="font-size: 48px; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("CancelledAppointments")" class="text-white small">View Details ?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Appointments Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Upcoming Appointments</h5>
+                    <a href="@Url.Action("CreateAppointment")" class="btn btn-sm btn-primary">
+                        <i class="feather-plus me-1"></i> New Appointment
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="feather-check-circle me-2"></i>@TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="feather-alert-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Doctor</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.AppointmentId</td>
+                                            <td>
+                                                @if (item.Doctor != null)
+                                                {
+                                                    <strong>Dr. @item.Doctor.FullName</strong>
+                                                    if (item.Doctor.Department != null)
+                                                    {
+                                                        <br /><small class="text-muted">@item.Doctor.Department.Name</small>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.AppointmentDate.HasValue)
+                                                {
+                                                    @item.AppointmentDate.Value.ToString("dd MMMM yyyy, dddd")
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary fs-6">@item.AppointmentTime</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success">Active</span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(@item.AppointmentId)">
+                                                    <i class="feather-x-circle me-1"></i> Cancel
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="feather-info me-2"></i>
+                            You have no upcoming appointments.
+                            <a href="@Url.Action("CreateAppointment")" class="alert-link">Book an appointment now!</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function cancelAppointment(appointmentId) {
+            Swal.fire({
+                title: 'Cancel Appointment',
+                text: "Are you sure you want to cancel this appointment? The cancelled time slot will become available again.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Cancel It!',
+                cancelButtonText: 'No, Go Back'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("CancelAppointment", "Patient", new { area = "Patient" })',
+                        type: 'POST',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'An error occurred.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

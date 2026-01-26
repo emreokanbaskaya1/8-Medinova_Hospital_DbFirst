@@ -1,0 +1,223 @@
+@model Medinova.Models.User
+@{
+    ViewBag.Title = "Assign Roles";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var allRoles = ViewBag.AllRoles as List<Medinova.Models.Role>;
+    var userRoleIds = ViewBag.UserRoleIds as List<int>;
+    var doctors = ViewBag.Doctors as SelectList;
+}
+
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="feather-shield me-2"></i>Assign Roles to User
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- User Info -->
+                <div class="alert alert-info mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-text avatar-lg bg-primary text-white rounded-circle me-3">
+                            <i class="feather-user fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">@Model.FirstName @Model.LastName</h5>
+                            <p class="mb-0">
+                                <strong>Username:</strong> <code>@Model.UserName</code>
+                            </p>
+                            <p class="mb-0">
+                                <strong>Current Role(s):</strong> 
+                                @if (Model.Roles.Any())
+                                {
+                                    foreach (var role in Model.Roles)
+                                    {
+                                        var roleClass = role.RoleName == "Admin" ? "bg-danger" :
+                                                       role.RoleName == "Doctor" ? "bg-primary" :
+                                                       role.RoleName == "Patient" ? "bg-success" : "bg-secondary";
+                                        <span class="badge @roleClass">@role.RoleName</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">No Role Assigned</span>
+                                }
+                            </p>
+                            @if (Model.Doctor != null)
+                            {
+                                <p class="mb-0 mt-2">
+                                    <strong>Doctor Profile:</strong> 
+                                    <span class="badge bg-info">@Model.Doctor.FullName</span>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="feather-alert-circle me-2"></i>@TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("AssignRole", "AdminUser", new { area = "Admin", id = Model.UserId }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Select Role(s)</label>
+                        <p class="text-muted small mb-3">Choose one or more roles for this user:</p>
+                        
+                        <div class="row">
+                            @foreach (var role in allRoles)
+                            {
+                                var isChecked = userRoleIds.Contains(role.RoleId);
+                                var roleIcon = role.RoleName == "Admin" ? "feather-shield" :
+                                              role.RoleName == "Doctor" ? "feather-activity" :
+                                              role.RoleName == "Patient" ? "feather-user" : "feather-users";
+                                var roleBg = role.RoleName == "Admin" ? "bg-soft-danger" :
+                                            role.RoleName == "Doctor" ? "bg-soft-primary" :
+                                            role.RoleName == "Patient" ? "bg-soft-success" : "bg-soft-secondary";
+                                var roleDesc = role.RoleName == "Admin" ? "Full system access, manage users, doctors, and all content" :
+                                              role.RoleName == "Doctor" ? "View and manage appointments assigned to them" :
+                                              role.RoleName == "Patient" ? "Book appointments and manage their own bookings" : "";
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100 @(isChecked ? "border-primary border-2" : "")" data-role="@role.RoleName">
+                                        <div class="card-body text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input role-checkbox" type="checkbox" 
+                                                       name="selectedRoles" value="@role.RoleId" 
+                                                       id="role_@role.RoleId"
+                                                       data-role-name="@role.RoleName"
+                                                       @(isChecked ? "checked" : "")>
+                                                <label class="form-check-label w-100" for="role_@role.RoleId" style="cursor: pointer;">
+                                                    <div class="avatar-text avatar-lg @roleBg rounded-circle mx-auto mb-3">
+                                                        <i class="@roleIcon fs-4"></i>
+                                                    </div>
+                                                    <h6 class="mb-2">@role.RoleName</h6>
+                                                    <small class="text-muted">@roleDesc</small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Doctor Selection (Only visible when Doctor role is selected) -->
+                    <div class="mb-4" id="doctorSelectionSection" style="display: @(userRoleIds.Contains(2) ? "block" : "none")">
+                        <label class="form-label fw-bold text-danger">
+                            <i class="feather-user-check me-2"></i>Select Which Doctor This User Is *
+                        </label>
+                        <p class="text-muted small mb-3">
+                            <i class="feather-alert-triangle me-1 text-warning"></i>
+                            Since you've assigned the "Doctor" role, you <strong>MUST</strong> select which doctor profile this user represents:
+                        </p>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                @Html.DropDownList("doctorId", doctors, "-- Select Doctor --", new { @class = "form-select form-select-lg", id = "doctorDropdown" })
+                                <small class="form-text text-muted mt-2">
+                                    <i class="feather-info me-1"></i>
+                                    This links the user account to a specific doctor in the system so they can see their appointments.
+                                </small>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="alert alert-danger mb-0 small">
+                                    <i class="feather-alert-triangle me-2"></i>
+                                    <strong>Required!</strong>
+                                    <div class="mt-1">Doctor role requires doctor selection.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a href="@Url.Action("Index", "AdminUser", new { area = "Admin" })" class="btn btn-secondary">
+                            <i class="feather-arrow-left me-1"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="feather-save me-1"></i> Save Changes
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            // Visual feedback when checkbox is clicked
+            $('.role-checkbox').change(function() {
+                var card = $(this).closest('.card');
+                
+                if ($(this).is(':checked')) {
+                    card.addClass('border-primary border-2');
+                } else {
+                    card.removeClass('border-primary border-2');
+                }
+
+                // Show/hide doctor selection based on Doctor role checkbox
+                toggleDoctorSelection();
+            });
+
+            function toggleDoctorSelection() {
+                var isDoctorChecked = $('.role-checkbox[data-role-name="Doctor"]').is(':checked');
+                
+                if (isDoctorChecked) {
+                    $('#doctorSelectionSection').slideDown();
+                    $('#doctorDropdown').prop('required', true);
+                } else {
+                    $('#doctorSelectionSection').slideUp();
+                    $('#doctorDropdown').prop('required', false);
+                    $('#doctorDropdown').val(''); // Clear selection
+                }
+            }
+
+            // Form validation
+            $('form').submit(function(e) {
+                var isDoctorChecked = $('.role-checkbox[data-role-name="Doctor"]').is(':checked');
+                var doctorId = $('#doctorDropdown').val();
+
+                if (isDoctorChecked && !doctorId) {
+                    e.preventDefault();
+                    
+                    // Highlight the dropdown
+                    $('#doctorDropdown').addClass('is-invalid');
+                    
+                    // Show alert
+                    Swal.fire({
+                        title: 'Doctor Selection Required!',
+                        text: 'You must select which doctor this user is when assigning the Doctor role.',
+                        icon: 'error',
+                        confirmButtonColor: '#d33'
+                    });
+                    
+                    // Scroll to dropdown
+                    $('html, body').animate({
+                        scrollTop: $('#doctorSelectionSection').offset().top - 100
+                    }, 500);
+                    
+                    return false;
+                } else {
+                    $('#doctorDropdown').removeClass('is-invalid');
+                }
+            });
+
+            // Remove invalid class when dropdown changes
+            $('#doctorDropdown').change(function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+}
